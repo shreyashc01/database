@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Print Window Example</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+  </style>
+  <script>
+    $(document).ready(function () {
+      var selectedText = "";
+
+      $('#customizedText').mouseup(function () {
+        selectedText = getSelectedText();
+      });
+
+      function getSelectedText() {
+        var text = "";
+        if (typeof window.getSelection !== "undefined") {
+          text = window.getSelection().toString();
+        } else if (typeof document.selection !== "undefined" && document.selection.type === "Text") {
+          text = document.selection.createRange().text;
+        }
+        return text;
+      }
+
+      $('#printButton').click(function () {
+        var pageInnerContents = $('.page-inner').html();
+
+        var printWindow = window.open('', '_blank');
+        printWindow.document.open();
+        printWindow.document.write('<html> <head> <title>Print</title> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css"> <style>' +
+          '.quotation-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-right: 20px; border-bottom: 2px solid #333; }' +
+          'tfoot tr:nth-child(odd) { background-color: #f2f2f2; }' +
+          '.quotation-header img { max-height: 60px; }' +
+          '#customizedText { flex: 1; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }' +
+          'table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: medium; }' +
+          'table th, table td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; font-size: medium; }' +
+          'table th { background-color: #333; color: #fff; font-weight: bold; font-size: medium; }' +
+          'table tfoot td { text-align: right; border-top: 2px solid #333; }' +
+          '.term-conditions { border: 2px solid #110f0f; padding: 30px; line-height: 1.5; }' +
+          '.term-conditions h4 { margin-top: 0; margin-bottom: 10px; }' +
+          '</style> </head> <body>' +
+          '<div class="content">' + pageInnerContents + '</div>' +
+          '</body> </html>');
+        printWindow.document.close();
+        printWindow.onload = function () {
+          printWindow.print();
+          printWindow.close();
+        };
+      });
+
+      $('#colorInput').change(function () {
+        var color = $(this).val();
+        applyStyleToSelectedText('color', color);
+      });
+
+      $('#fontWeightInput').change(function () {
+        var fontWeight = $(this).val();
+        applyStyleToSelectedText('font-weight', fontWeight);
+      });
+
+      $('#backgroundColorInput').change(function () {
+        var backgroundColor = $(this).val();
+        applyStyleToSelectedText('background-color', backgroundColor);
+      });
+
+      $('#fontFamilyInput').change(function () {
+        var fontFamily = $(this).val();
+        applyStyleToSelectedText('font-family', fontFamily);
+      });
+
+      function applyStyleToSelectedText(styleName, styleValue) {
+        var selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+          var range = selection.getRangeAt(0);
+          var selectedText = range.toString();
+          var modifiedText = '<span style="' + styleName + ':' + styleValue + '">' + selectedText + '</span>';
+          range.deleteContents();
+          var newNode = document.createElement("span");
+          newNode.innerHTML = modifiedText;
+          range.insertNode(newNode);
+        }
+      }
+    });
+  </script>
+</head>
+
+<body>
+  <div class="page-inner">
+    <div class="term-conditions">
+      <div class="quotation-header">
+        <title>Quotation</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+        <div>
+          <h2><strong >Quotation</strong></h2>
+          <span >Quotation Date: </span><span>{{ add_user.due_date_offer }}</span><br>
+          <span >Quotation No: </span><span>{{ add_user.quotation_number_offer }}</span><br>
+        </div>
+        <img src="/static/assets/img/logo.jpg" alt="Company Logo">
+      </div>
+      <div class="from">
+        <span>To:</span>
+        <p><strong>{{ add_user.customer_name_offer }}</strong></p>
+        <p>{{ addoffer_address }}</p>
+
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: center;">Sl No</th>
+            <th style="text-align: center;">Item</th>
+            <th style="text-align: center;">Part No</th>
+            <th style="text-align: center;">Quantity</th>
+            <th style="text-align: center;">Unit Price</th>
+            <th style="text-align: center;">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ html_rows | safe }}
+        </tbody>
+
+        <tfoot>
+          <tr>
+            <td colspan="5">Subtotal:</td>
+            <td >{{ add_user.total_amount_offer }}</td>
+          </tr>
+          <tr>
+            <td colspan="5">Freight:</td>
+            <td>{{ add_user.freight_offer }}</td>
+          </tr>
+          <tr>
+            <td colspan="5">P&F Percentage:</td>
+            <td>{{ add_user.pf_percentage_offer }}</td>
+          </tr>
+          <tr>
+            <td colspan="5"><span>{{ add_user.cgst_igst_type_offer }}</span>:</td>
+            <td>{{ add_user.gst_offer }}</td>
+          </tr>
+          <tr>
+            <td colspan="5">Grand Total:</td>
+            <td>{{ add_user.grand_total_offer }}</td>
+
+          </tr>
+        </tfoot>
+
+      </table>
+      <h4 id="grandTotalOffer">
+      </h4>
+      <div class="term-conditions">
+        <h4><strong style="font-family: Algerian;">Terms and Conditions:</strong></h4>
+        <p>
+          <strong>1. Price Basis :</strong> {{ add_user.subject_offer }}<br>
+          <strong>2. P&F Charges : </strong>{{ add_user.PandFcharges_offer }}<br>
+          <strong>3. <span style="font-weight: bold; text-transform: uppercase;">{{
+              add_user.cgst_igst_type_offer}}</span> : </strong>{{ add_user.igst_terms_offer }}<br>
+          <strong>4. HSN CODE : </strong>{{ add_user.hsn_code_offer }}<br>
+          <strong>5. Payment Terms :</strong> {{ add_user.payment_terms_offer }}<br>
+          <strong>6. Delivery :</strong> {{ add_user.delivery_terms_offer }}<br>
+          <strong>7. Freight : </strong>{{ add_user.freight_terms_offer }}<br>
+          <strong>8. Validity :</strong> {{ add_user.validity_terms_offer }}<br>
+          <strong>9. Warranty : </strong> {{ add_user.warranty_terms_offer }}<br>
+        </p>
+      </div>
+
+      <div>
+        <p>
+          <strong>Thanking you,</strong> <br>
+          <strong>Yours faithfully,</strong><br>
+          <strong>Name : </strong> {{ add_user.marketing_person_offer }}<br>
+          <strong>Role : </strong> {{ addoffer_Role }}<br>
+          <strong>Contact No : </strong> {{ addoffer_Phonenumber }}<br>
+          <!-- <strong>Yours faithfully,</strong><br>
+        <strong>Yours faithfully,</strong><br> -->
+        </p>
+      </div>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+    </div>
+  </div>
+  <div>
+    <label for="colorInput">Color:</label>
+    <input type="color" id="colorInput" value="#000000">
+  </div>
+  <div>
+    <label for="fontWeightInput">Font Weight:</label>
+    <select id="fontWeightInput">
+      <option value="normal">Normal</option>
+      <option value="bold">Bold</option>
+      <option value="bolder">Bolder</option>
+      <option value="lighter">Lighter</option>
+    </select>
+  </div>
+  <div>
+    <label for="backgroundColorInput">Background Color:</label>
+    <input type="color" id="backgroundColorInput" value="#ffffff">
+  </div>
+  <div>
+    <label for="fontFamilyInput">Font Family:</label>
+    <select id="fontFamilyInput">
+      <option value="Arial, sans-serif">Arial</option>
+      <option value="Helvetica, sans-serif">Helvetica</option>
+      <option value="Times New Roman, serif">Times New Roman</option>
+      <option value="Courier New, monospace">Courier New</option>
+      <option value="Verdana, sans-serif">Verdana</option>
+      <option value="Georgia, serif">Georgia</option>
+      <option value="Palatino, serif">Palatino</option>
+      <option value="Garamond, serif">Garamond</option>
+      <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+      <option value="Trebuchet MS, sans-serif">Trebuchet MS</option>
+      <option value="Arial Black, sans-serif">Arial Black</option>
+      <option value="Impact, sans-serif">Impact</option>
+      <option value="Lucida Sans Unicode, sans-serif">Lucida Sans Unicode</option>
+      <option value="Tahoma, sans-serif">Tahoma</option>
+    </select>
+  </div>
+  <div>
+    <button id="printButton">Print</button>
+  </div>
+</body>
+
+</html>

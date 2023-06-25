@@ -1,0 +1,577 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<div class="content">
+    <div class="page-inner">
+        <div class="page-header">
+            <h4 class="page-title">INVOICE</h4>
+            <ul class="breadcrumbs">
+                <li class="nav-home">
+                    <a href="/">
+                        <i class="flaticon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="/offer-addoffer">Invoice</a>
+                </li>
+                <li class="separator">
+                    <i class="flaticon-right-arrow"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="/offer-offerlist">Add Invoice</a>
+                </li>
+            </ul>
+        </div>
+
+        <section class="content">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card ">
+                        <div class="card-header"> Invoice Details </div>
+                        <div class="card-body">
+                            <div class="col-sm-12">
+                                <div class="row">
+
+                                    <div class="form-group col-sm-3">
+                                        <label>Invoice No<span style="color: red;">*</span>
+                                        </label>
+                                        <input type="text" maxlength="200" autocomplete="off" numberonly=""
+                                            class="form-control ng-untouched ng-pristine ng-invalid">
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Invoice Date<span style="color: red;">*</span>
+                                        </label>
+                                        <div class="input-group date">
+                                            <input type="date" bsdatepicker="" autocomplete="off"
+                                                class="form-control pull-right ng-untouched ng-pristine ng-invalid">
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Supplier Code</label>
+                                        <input type="text" maxlength="200" autocomplete="off"
+                                            class="form-control ng-untouched ng-pristine ng-valid">
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Invoice Type<span style="color: red;">*</span></label>
+                                        <select id="invoiceType"
+                                            class="form-control ng-untouched ng-pristine ng-invalid"
+                                            onchange="showExportFields(this)">
+                                            <option value="">Select Invoice Type</option>
+                                            <option value="Standard">Standard</option>
+                                            <option value="Export">Export</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-4">
+                                        <label>OC Type<span style="color: red;">*</span></label>
+                                        <select id="oc_name_change" class="form-control ng-dirty ng-valid ng-touched">
+                                            <option value="">Select OC Type</option>
+                                            <option value="OC">OC</option>
+                                            <option value="None_OC">None OC</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-sm-4" id="buyers_name">
+
+                                    </div>
+                                    <div class="form-group col-sm-4" id="oc_number">
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label>Details of Receipt (Billing Address)</label>
+                                        <textarea class="form-control ng-untouched ng-pristine ng-valid"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label>Details of Receipt (Delivery Address) </label>
+                                        <textarea class="form-control ng-untouched ng-pristine ng-valid"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-3">
+                                        <label>Buyer's GSTIN No</label>
+                                        <input type="text" maxlength="200" autocomplete="off"
+                                            class="form-control ng-untouched ng-pristine ng-valid">
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Buyer's Pan No</label>
+                                        <input type="text" maxlength="200" autocomplete="off"
+                                            class="form-control ng-untouched ng-pristine ng-valid">
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Buyer's Order No</label>
+                                        <input type="text" maxlength="200" autocomplete="off"
+                                            class="form-control ng-untouched ng-pristine ng-valid">
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Buyer's Order Date</label>
+                                        <div class="input-group date">
+                                            <input type="date" bsdatepicker="" autocomplete="off"
+                                                class="form-control pull-right ng-untouched ng-pristine ng-valid">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-3">
+                                        <label>Buyer's State Code</label>
+                                        <input type="text" maxlength="200" autocomplete="off"
+                                            class="form-control ng-untouched ng-pristine ng-valid">
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Buyer's Place of Supply</label>
+                                        <input type="text" maxlength="200" autocomplete="off"
+                                            class="form-control ng-untouched ng-pristine ng-valid">
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Transporter Details /LR No /Date</label>
+                                        <input type="text" maxlength="200" autocomplete="off"
+                                            class="form-control ng-untouched ng-pristine ng-valid">
+                                    </div>
+                                    <div class="form-group col-sm-3" id="exportFields">
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-4">
+                                        <label>Payment Terms</label>
+                                        <input type="text" maxlength="200" autocomplete="off"
+                                            class="form-control ng-untouched ng-pristine ng-valid">
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Kit / Spare<span style="color: red;">*</span></label>
+                                        <select name="offer_type" class="form-control offertype_id">
+                                            <option value="None" selected>Add offer</option>
+                                            <option value="Spares">Spares</option>
+                                            <option value="Kits">Kits</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="content">
+            <div class="page-section">
+                <div class="card card-fluid">
+                    <div class="card-body">
+                        <table style="width: 100%;" id="product-table">
+
+
+                        </table>
+                    </div>
+                </div>
+        </section>
+
+
+        <section class="content">
+            <div class="page-section">
+                <div class="card card-fluid">
+                    <div class="card-header"> Claculations </div>
+                    <div class="card-body">
+
+                        <link rel="stylesheet"
+                            href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css">
+
+                        <table class="table table-light table-striped">
+                            <tr>
+                                <th>Gross Amount:</th>
+                                <td></td>
+                                <td><input type="number"
+                                        style="height: 50px !important; background-color: transparent !important; color: white !important;"
+                                        class="form-control" id="grossAmount" step="0.01" disabled></td>
+                            </tr>
+                            <tr>
+                                <th>Discount Type:</th>
+                                <td>
+                                    <input type="radio" name="discountType" value="percentage" checked>Percentage
+                                    <input type="radio" name="discountType" value="value">Value
+                                </td>
+                                <td><input type="number" style="height: 50px !important;" class="form-control"
+                                        id="discountValue" step="0.01" required></td>
+                            </tr>
+                            <tr>
+                                <th>Total Assessable Value:</th>
+                                <td></td>
+                                <td><input type="number"
+                                        style="height: 50px !important; background-color: transparent !important; color: white !important;"
+                                        class="form-control" id="assessableValue" disabled></td>
+                            </tr>
+                            <tr>
+                                <th>P & F %:</th>
+                                <td><input type="number" style="height: 50px !important;" class="form-control"
+                                        id="pfPercentage" step="0.01" required></td>
+                                <td><input type="number"
+                                        style="height: 50px !important; background-color: transparent !important; color: white !important;"
+                                        class="form-control" id="pfValue" disabled></td>
+                            </tr>
+                            <tr>
+                                <th>Freight:</th>
+                                <td><input type="number" style="height: 50px !important;" class="form-control"
+                                        id="freightValue" step="0.01" required></td>
+                                <td><input type="number"
+                                        style="height: 50px !important; background-color: transparent !important; color: white !important;"
+                                        class="form-control" id="totalFreight" disabled></td>
+                            </tr>
+                            <tr>
+                                <th>TCS %:</th>
+                                <td><input type="number" style="height: 50px !important;" class="form-control"
+                                        id="tcsPercentage" step="0.01" required></td>
+                                <td><input type="number" class="form-control"
+                                        style="height: 50px !important; background-color: transparent !important; color: white !important;"
+                                        id="tcsValue" disabled></td>
+                            </tr>
+                            <tr>
+                                <th>GST %:</th>
+                                <td><input type="number" class="form-control" style="height: 50px !important;"
+                                        id="gstPercentage" step="0.01" required></td>
+                                <td><input type="number"
+                                        style="height: 50px !important; background-color: transparent !important; color: white !important;"
+                                        class="form-control" id="gstValue" disabled></td>
+                            </tr>
+                            <tr>
+                                <th>Round Off Type:</th>
+                                <td>
+                                    <input type="radio" name="roundOffType" value="addition" checked>Addition
+                                    <input type="radio" name="roundOffType" value="subtraction">Subtraction
+                                </td>
+                                <td><input type="number" class="form-control" style="height: 50px !important;"
+                                        id="roundOffValue" step="0.01" required></td>
+                            </tr>
+                            <tr>
+                                <th>Grand Total:</th>
+                                <td></td>
+                                <td><input type="number" class="form-control"
+                                        style="height: 50px !important; background-color: transparent !important; color: white !important;"
+                                        id="grandTotal" disabled></td>
+                            </tr>
+                        </table>
+                        <script
+                            src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.bundle.min.js"></script>
+
+
+                    </div>
+                </div>
+            </div>
+    </div>
+    </section>
+
+
+    <div style="text-align: center;">
+        <button id="btnSave" type="submit" class="btn btn-primary btn-sm" fdprocessedid="11p0ic">Save</button>
+        &nbsp;
+        <a routerlink="/invoice-invoiceslist" queryparamshandling="preserve" class="btn btn-danger btn-sm"
+            href="/invoice-invoiceslist">Cancel </a>
+    </div>
+</div>
+</div>
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script>
+
+    $(document).ready(function () {
+        $('#invoiceType').on('change', function () {
+            if ($(this).val() === 'Export') {
+                $('#exportFields').html('<label>Currency</label><select class="form-control ng-dirty ng-valid ng-touched"><option value="None">Select Currency Type</option>{% for user in currency_user_invoice %}<option>{{ user.currency_name }}</option>{% endfor %}</select>');
+            } else {
+                $('#exportFields').empty();
+            }
+        });
+    });
+
+    $(document).ready(function () {
+    $('#oc_name_change').on('change', function () {
+        if ($(this).val() === 'OC') {
+            $('#oc_number').html(`
+                <label>OC Number<span style="color: red;">*</span></label>
+                <div class="ng-select-container ng-has-value">
+                    <div class="ng-value-container">
+                        <div class="ng-placeholder">
+                            <select id="main_oc_select" name="main_oc_select" class="form-control">
+                                {% for user in oc_list %}
+                                <option>{{ user.oc_number }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>`);
+            $('#buyers_name').html(`
+                <label>Buyer's Name<span style="color: red;">*</span></label>
+                <div class="ng-select-container ng-has-value">
+                    <div class="ng-value-container">
+                        <div class="ng-placeholder">
+                            <input id="buyer_input" class="form-control ng-untouched ng-pristine ng-valid" disabled>
+                        </div>
+                    </div>
+                </div>`);
+        } else {
+            $('#oc_number').empty();
+            $('#buyers_name').html(`
+                <label>Buyer's Name<span style="color: red;">*</span></label>
+                <div class="ng-select-container ng-has-value">
+                    <div class="ng-value-container">
+                        <div class="ng-placeholder">
+                            <select id="main_usr_select" name="main_usr_select" class="form-control">
+                                {% for user in users %}
+                                <option>{{ user.customer_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>`);
+        }
+    });
+
+    // $(document).on('change', '#main_oc_select', function() {
+    //     // Get the selected oc_number
+    //     var selectedOcNumber = $(this).val();
+        
+    //     // Find the corresponding buyer data
+    //     var selectedBuyer = null;
+    //     {% for user in oc_list %}
+    //         if ('{{ user.oc_number }}' === selectedOcNumber) {
+    //             selectedBuyer = '{{ user.buyer }}';
+    //             break;
+    //         }
+    //     {% endfor %}
+        
+    //     // Update the input value with the selected buyer
+    //     $('#buyer_input').val(selectedBuyer);
+    // });
+});
+
+    function addProductRow() {
+        const tableBody = document.querySelector('#product-table tbody');
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+		<td><input type="number" class="form-control"></td>
+		<td><select name="main_usr_select" class="form-control"> {% for user in user1 %} <option>{{ user.product_name }}</option>{% endfor %}</select></td>
+		<td><select class="form-control ng-untouched ng-pristine ng-invalid">
+                <option value="">Select HSN Code</option>
+                <option value="84798999">84798999</option>
+                <option value="84799090">84799090</option>
+                <option value="998717">998717</option>
+            </select>
+            </td>
+		<td><input type="number" class="quantity form-control"></td>
+		<td><select class="form-control ng-untouched ng-pristine ng-invalid">
+				<option value="">UOM </option>
+				<option value="Nos">Nos</option>
+				<option value="Meters">Meters</option>
+				<option value="Millimeter">Millimeter</option>
+				<option value="Bundle">Bundle</option>
+				<option value="Pack">Pack</option>
+				<option value="Kg">Kg</option>
+				<option value="Set">Set</option>
+			</select></td>
+		<td><input type="number" class="unit-price form-control"></td>
+		<td class="total">0</td>
+		<td><button class="btn btn-danger" onclick="removeProductRow(this)">Remove</button></td>
+		`;
+        tableBody.appendChild(newRow);
+        newRow.querySelectorAll('.quantity, .unit-price').forEach(input => {
+            input.addEventListener('input', updateTotal);
+        });
+        updateTotal();
+    }
+
+    function removeProductRow(button) {
+        const row = button.closest('tr');
+        row.remove();
+        updateTotal();
+    }
+
+    function addKitRow() {
+        const tableBody = document.querySelector('#product-table tbody');
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+		<td><input type="number" class="form-control"></td>
+		<td><input type="number" class="form-control"></td>
+		<td><input type="text" class="form-control" style="width: 300px;"></td>
+		<td><select class="form-control ng-untouched ng-pristine ng-invalid">
+                <option value="">Select HSN Code</option>
+                <option value="84798999">84798999</option>
+                <option value="84799090">84799090</option>
+                <option value="998717">998717</option>
+            </select>
+        </td>
+		<td><input type="number" class="form-control"></td>
+		<td><input type="number" class="quantity form-control"></td>
+		<td><input type="number" class="form-control"></td>
+		<td><select class="form-control ng-untouched ng-pristine ng-invalid">
+				<option value="">UOM </option>
+				<option value="Nos">Nos</option>
+				<option value="Meters">Meters</option>
+				<option value="Millimeter">Millimeter</option>
+				<option value="Bundle">Bundle</option>
+				<option value="Pack">Pack</option>
+				<option value="Kg">Kg</option>
+				<option value="Set">Set</option>
+			</select></td>
+		<td><input type="number" class="unit-price form-control"></td>
+		<td class="total">0</td>
+		<td><button class="btn btn-danger" onclick="removeProductRow(this)">Remove</button></td>
+		`;
+        tableBody.appendChild(newRow);
+        newRow.querySelectorAll('.quantity, .unit-price').forEach(input => {
+            input.addEventListener('input', updateTotal);
+        });
+        updateTotal();
+    }
+
+    $(document).ready(function () {
+        $(".offertype_id").on("change", function () {
+            var selectedOption = $(this).val();
+            switch (selectedOption) {
+                case "Spares":
+                    var table = document.getElementById('emptbl');
+                    markup = $(`
+								<thead>
+									<tr>
+										<th>Customer Part No</th>
+										<th>Product</th>
+										<th>HSN Code</th>
+										<th>Quantity</th>
+										<th>UOM</th>
+										<th>Unit Price</th>
+										<th>Total Price</th>
+										<th><a class="btn btn-success" onclick="addProductRow()" value="">Add Product</a></th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+					`)
+                    tableBody = $("#product-table");
+                    tableBody.empty();
+                    tableBody.append(markup);
+                    break;
+
+                case "Kits":
+                    var table = document.getElementById('emptbl');
+                    markup = $(`
+							<thead>
+								<tr>
+                                    <th style="font-size: 12px;">Customer Part No*</th>
+
+								<th style="font-size: 12px;" >Our Part No</th>
+								<th>Product</th>
+								<th style="font-size: 12px;" >HSN Code</th>
+                                <th style="font-size: 12px;">Total Qty</th>
+								<th style="font-size: 12px;">Quantity*</th>
+                                <th style="font-size: 12px;">Remain Qty</th>
+                                <th style="font-size: 12px;">UOM</th>
+								<th style="font-size: 12px;">Unit Price*</th>
+								<th style="font-size: 12px;">Total Price</th>
+								<th><a class="btn btn-success" onclick="addKitRow()" value="">Add Kit</a></th>
+								</tr>
+							</thead>
+								<tbody>
+								</tbody>
+								`)
+
+                    tableBody = $("#product-table");
+                    tableBody.empty();
+                    tableBody.append(markup);
+                    break;
+            }
+
+        });
+    });
+    $(document).ready(function () {
+        // Function to calculate and update the total
+        function calculateTotal() {
+            var grossAmount = parseFloat($('#grossAmount').val());
+            var discountType = $('input[name="discountType"]:checked').val();
+            var discountValue = parseFloat($('#discountValue').val());
+            var assessableValue = 0;
+
+            if (discountType === 'percentage') {
+                assessableValue = grossAmount - (grossAmount * discountValue / 100);
+            } else if (discountType === 'value') {
+                assessableValue = grossAmount - discountValue;
+            }
+
+            var pfPercentage = parseFloat($('#pfPercentage').val());
+            var pfValue = assessableValue * pfPercentage / 100;
+            var freightValue = parseFloat($('#freightValue').val());
+            var tcsPercentage = parseFloat($('#tcsPercentage').val());
+            var tcsValue = (assessableValue + freightValue + pfValue) + tcsPercentage / 100;
+            var gstPercentage = parseFloat($('#gstPercentage').val());
+            var gstValue = tcsValue * gstPercentage / 100;
+            var roundOffType = $('input[name="roundOffType"]:checked').val();
+            var roundOffValue = parseFloat($('#roundOffValue').val());
+            var grandTotal = tcsValue + gstValue;
+
+            if (roundOffType === 'addition') {
+                grandTotal += roundOffValue;
+            } else if (roundOffType === 'subtraction') {
+                grandTotal -= roundOffValue;
+            }
+
+            $('#assessableValue').val(assessableValue.toFixed(2));
+            $('#pfValue').val(pfValue.toFixed(2));
+            $('#totalFreight').val(freightValue.toFixed(2));
+            $('#tcsValue').val(tcsValue.toFixed(2));
+            $('#gstValue').val(gstValue.toFixed(2));
+            $('#grandTotal').val(grandTotal.toFixed(2));
+        }
+
+        // Bind event handlers to calculate the total when input values change
+        $('#grossAmount, input[name="discountType"], #discountValue, #pfPercentage, #freightValue, #tcsPercentage, #gstPercentage, input[name="roundOffType"], #roundOffValue').on('input', calculateTotal);
+
+        // Trigger initial calculation
+        calculateTotal();
+    });
+
+    function updateTotal() {
+        const rows = document.querySelectorAll('#product-table tbody tr');
+        let total = 0;
+        rows.forEach(row => {
+            const quantity = Number(row.querySelector('.quantity').value);
+            const unitPrice = Number(row.querySelector('.unit-price').value);
+            const rowTotal = quantity * unitPrice;
+            row.querySelector('.total').textContent = `${rowTotal}`;
+            total += rowTotal;
+        });
+        $('#grossAmount').val(total);
+
+    }
+
+
+
+    document.querySelectorAll('.quantity, .unit-price').forEach(input => {
+        input.addEventListener('input', updateTotal);
+    });
+
+
+</script>
+
+<style>
+    th,
+    td {
+        border: 1px solid black;
+        padding: 5px;
+    }
+
+    .container[_ngcontent-owj-c93] {
+        width: 100%
+    }
+</style>
+{% endblock javascripts %}
