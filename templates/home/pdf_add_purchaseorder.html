@@ -1,0 +1,648 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Add User {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+
+{% block stylesheets %}
+
+<style>
+  /* CSS for the popup */
+  .popup {
+    position: fixed;
+    top: 87px;
+    left: 850px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    z-index: 9999;
+    cursor: move;
+    /* Add cursor style for draggable */
+  }
+
+  /* CSS for the print button and cancel link container */
+  .button-container {
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  /* CSS for the print button */
+  #printButton {
+    margin-right: 10px;
+  }
+
+  /* CSS for page breaks and borders */
+  .page-inner {
+    page-break-inside: avoid;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+
+  /* Hide border for the first page */
+  .page-inner:first-child {
+    border: none;
+  }
+
+  /* Footer styles */
+  .container {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .code {
+    font-size: 30px;
+    color: #14568A; /* Dark blue color */
+    margin-bottom: 5px;
+  }
+
+  .address {
+    font-size: 10px;
+    color: #14568A; /* Dark blue color */
+  }
+
+  .additional-info {
+    font-size: 10px;
+    color: #14568A; /* Dark blue color */
+    margin-top: 5px;
+  }
+</style>
+
+
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="content">
+  <div class="popup">
+    <div>
+      <label for="colorInput">Text Color:</label>
+      <input type="color" id="colorInput" value="#000000">
+    </div>
+    <div>
+      <label for="backgroundColorInput">Highlight Text:</label>
+      <input type="color" id="backgroundColorInput" value="#ffffff">
+    </div>
+
+    <div>
+      <label for="commonFontStyleInput">Common Font Style:</label>
+      <select id="commonFontStyleInput">
+        <option value="Arial, sans-serif">Arial</option>
+        <option value="Helvetica, sans-serif">Helvetica</option>
+        <option value="Times New Roman, serif">Times New Roman</option>
+        <option value="Courier New, monospace">Courier New</option>
+        <option value="Verdana, sans-serif">Verdana</option>
+        <option value="Georgia, serif">Georgia</option>
+        <option value="Palatino, serif">Palatino</option>
+        <option value="Garamond, serif">Garamond</option>
+        <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        <option value="Trebuchet MS, sans-serif">Trebuchet MS</option>
+        <option value="Arial Black, sans-serif">Arial Black</option>
+        <option value="Impact, sans-serif">Impact</option>
+        <option value="Lucida Sans Unicode, sans-serif">Lucida Sans Unicode</option>
+        <option value="Tahoma, sans-serif">Tahoma</option>
+        <option value="Courier, monospace">Courier</option>
+        <option value="Brush Script MT, cursive">Brush Script MT</option>
+        <option value="Arial Narrow, sans-serif">Arial Narrow</option>
+        <option value="Bookman Old Style, serif">Bookman Old Style</option>
+        <option value="Century Gothic, sans-serif">Century Gothic</option>
+        <option value="Franklin Gothic Medium, sans-serif">Franklin Gothic Medium</option>
+        <option value="Arial Rounded MT Bold, sans-serif">Arial Rounded MT Bold</option>
+        <option value="Rockwell, serif">Rockwell</option>
+        <option value="Copperplate Gothic Bold, sans-serif">Copperplate Gothic Bold</option>
+      </select>
+    </div>
+
+    <div class="button-container">
+      <button id="printButton" type="submit" class="btn btn-primary btn-sm">Print</button>
+      <a routerlink="/offer-offerlist" class="btn btn-danger btn-sm" href="/offer-offerlist">Cancel</a>
+    </div>
+  </div>
+
+
+  <div class="page-inner">
+    <div class="term-conditions">
+      <div class="quotation-header">
+        <title>Invoice</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+        <div>
+          <h2><span><strong>Invoice</strong></span></h2>
+          <span><strong>Invoice Date: </strong></span><span>{{ add_user.invoiceNo }}</span><br>
+          <span><strong>Invoice No: </strong></span><span>{{ add_user.invoiceDate }}</span><br>
+        </div>
+        <img src="/static/assets/img/logo.jpg" alt="Company Logo">
+      </div>
+      <div class="from">
+        <span><strong>Supplier Code:</strong></span>
+        <p><strong>{{ add_user.supplierCode }}</strong></p>
+        <p><span id="address"></span></p>
+      </div>
+      
+    
+      <style>
+        .from {
+          border-collapse: collapse;
+        }
+        
+        .from td {
+          border: 1px solid #ddd;
+          padding: 5px;
+        }
+        
+        .from p {
+          margin: 0;
+        }
+      </style>
+      
+      <table class="from">
+        {% if add_user.buyers_name %}
+          <tr>
+            <td><span>Buyer's Name:</span></td>
+            <td><span>{{ add_user.buyers_name }}</span></td>
+          </tr>
+        {% endif %}
+      
+        {% if add_user.buyersGSTIN %}
+          <tr>
+            <td><span>Buyer's GSTIN:</span></td>
+            <td><span>{{ add_user.buyersGSTIN }}</span></td>
+          </tr>
+        {% endif %}
+      
+        {% if add_user.billingAddress %}
+          <tr>
+            <td><span>Billing Address:</span></td>
+            <td><span>{{ add_user.billingAddress }}</span></td>
+          </tr>
+        {% endif %}
+      
+        {% if add_user.buyersOrderNo %}
+          <tr>
+            <td><span>Buyer's Order Number:</span></td>
+            <td><span>{{ add_user.buyersOrderNo }}</span></td>
+          </tr>
+        {% endif %}
+
+        {% if add_user.buyersOrderNo %}
+          <tr>
+            <td><span>Buyer's Order Date:</span></td>
+            <td><span>{{ add_user.buyersOrderNo }}</span></td>
+          </tr>
+        {% endif %}
+
+        {% if add_user.placeOfSupply %}
+          <tr>
+            <td><span>Place of Supply:</span></td>
+            <td><span>{{ add_user.placeOfSupply }}</span></td>
+          </tr>
+        {% endif %}
+
+        {% if add_user.transporterDetails %}
+          <tr>
+            <td><span>Transporter Details:</span></td>
+            <td><span>{{ add_user.transporterDetails }}</span></td>
+          </tr>
+        {% endif %}
+      </table>
+      
+      
+      <table>
+        <thead>
+          <tr>
+            <th>SL No</th>
+            <th>part no</th>
+            <th>product</th>
+            <th>hsn code</th>
+            <th>quantity</th>
+            <th>invoice uom</th>
+            <th>unit price</th>
+          <th>totalPrice</th>
+          </tr>
+        </thead>
+        <tbody>
+          <span> {{ html_rows | safe }}</span>
+        </tbody>
+
+        <tfoot>
+          {% if add_user.invoice_grossAmount %}
+            <tr style="background-color: #EAF6FD;">
+              <td colspan="5"><span>Gross Amount :</span></td>
+              <td><span>{{ add_user.invoice_grossAmount }}</span></td>
+            </tr>
+          {% endif %}
+          {% if add_user.invoice_discountValue %}
+            <tr style="background-color: #EAF6FD;">
+              <td colspan="5"><span>Discount in {{ add_user.invoice_discountValue }} :</span></td>
+              <td><span>{{ add_user.invoice_discountValue }}</span></td>
+            </tr>
+          {% endif %}
+          {% if add_user.pfPercentage %}
+            <tr style="background-color: #EAF6FD;">
+              <td colspan="5"><span>P&F in %:</span></td>
+              <td><span>{{ add_user.pfPercentage }}</span></td>
+            </tr>
+          {% endif %}
+          {% if add_user.freightValue %}
+            <tr style="background-color: #EAF6FD;">
+              <td colspan="5"><span>Freight:</span></td>
+              <td><span>{{ add_user.freightValue }}</span></td>
+            </tr>
+          {% endif %}
+          {% if add_user.gstType %}
+            <tr style="background-color: #EAF6FD;">
+              <td colspan="5"><span>{{add_user.gstType}} [{{ add_user.invoice_gstValue }}]</span></td>
+              <td>
+                {% if add_user.gstType == 'IGST' %}
+                  <span>{{ add_user.gstValue }}</span>
+                {% elif add_user.gstType == 'CGST' %}
+                  <span>{{ add_user.gstValue}}</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endif %}
+          {% if add_user.invoice_roundOffValue %}
+            <tr style="background-color: #EAF6FD;">
+              <td colspan="5"><span>Round Off [ {% if add_user.roundOffType == 'addition' %}+{% else %}-{% endif %}]</span></td>
+              <td><span>{{ add_user.invoice_roundOffValue }}</span></td>
+            </tr>
+          {% endif %}
+          {% if add_user.invoice_grandTotal %}
+            <tr style="background-color: #EAF6FD;">
+              <td colspan="5"><span>Grand Total:</span></td>
+              <td><span>{{ add_user.invoice_grandTotal }}</span></td>
+            </tr>
+          {% endif %}
+        </tfoot>
+        
+
+      </table>
+      <span><strong>Total (in words):</strong>
+        <strong><h id="grandTotalOffer"></h></strong>
+      </span>
+      <!-- <div class="term-conditions">
+        <h4><span><strong>Terms and Conditions:</strong></span></h4>
+        <p>
+          {% if add_user.price_basis_offer %}
+            <span><strong>1. Price Basis :</strong> {{ add_user.price_basis_offer }}</span><br>
+            {% set count = 2 %}
+          {% else %}
+            {% set count = 1 %}
+          {% endif %}
+      
+          {% if add_user.PandFcharges_offer %}
+            <span><strong>{{ count }}. P&F Charges :</strong> {{ add_user.PandFcharges_offer }}</span><br>
+            {% set count = count + 1 %}
+          {% endif %}
+      
+          {% if add_user.igst_terms_offer %}
+            <span><strong>{{ count }}. GST :</strong> {{ add_user.igst_terms_offer }}</span><br>
+            {% set count = count + 1 %}
+          {% endif %}
+      
+          {% if add_user.hsn_code_offer %}
+            <span><strong>{{ count }}. HSN CODE :</strong> {{ add_user.hsn_code_offer }}</span><br>
+            {% set count = count + 1 %}
+          {% endif %}
+      
+          {% if add_user.payment_terms_offer %}
+            <span><strong>{{ count }}. Payment Terms :</strong> {{ add_user.payment_terms_offer }}</span><br>
+            {% set count = count + 1 %}
+          {% endif %}
+      
+          {% if add_user.delivery_terms_offer %}
+            <span><strong>{{ count }}. Delivery :</strong> {{ add_user.delivery_terms_offer }}</span><br>
+            {% set count = count + 1 %}
+          {% endif %}
+      
+          {% if add_user.freight_terms_offer %}
+            <span><strong>{{ count }}. Freight :</strong> {{ add_user.freight_terms_offer }}</span><br>
+            {% set count = count + 1 %}
+          {% endif %}
+      
+          {% if add_user.validity_terms_offer %}
+            <span><strong>{{ count }}. Validity :</strong> {{ add_user.validity_terms_offer }}</span><br>
+            {% set count = count + 1 %}
+          {% endif %}
+      
+          {% if add_user.contract_review_warrantly %}
+            <span><strong>{{ count }}. Warranty :</strong> {{ add_user.contract_review_warrantly }}</span><br>
+          {% endif %}
+        </p>
+      </div> -->
+          
+
+      <div>
+        <p>
+          <span>{{ add_user.footer_description_offer }}<span> <br>
+          <span><strong>Thanking you,</strong></span> <br>
+          <span><strong>Yours faithfully,</strong> </span> <br>
+          <span><strong>Name : </strong> {{ add_user.marketing_person_offer }} </span> <br>
+          <span><strong>Role : </strong> {{ addoffer_Role }} </span> <br>
+          <span><strong>Contact No : </strong> {{ addoffer_Phonenumber }} </span> <br>
+        </p>
+      </div>
+
+      <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .code {
+            font-size: 30px;
+            color: #14568A; /* Dark blue color */
+            margin-bottom: 5px;
+        }
+
+        .address {
+            font-size: 10px;
+            color: #14568A; /* Dark blue color */
+        }
+
+        .additional-info {
+            font-size: 10px;
+            color: #14568A; /* Dark blue color */
+            margin-top: 5px;
+        }
+    </style>
+    
+    <style>
+      /* CSS for the popup */
+      .popup {
+        position: fixed;
+        top: 87px;
+        left: 850px;
+        padding: 10px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        z-index: 9999;
+        cursor: move;
+        /* Add cursor style for draggable */
+      }
+    
+      /* CSS for the print button and cancel link container */
+      .button-container {
+        text-align: center;
+        margin-top: 10px;
+      }
+    
+      /* CSS for the print button */
+      #printButton {
+        margin-right: 10px;
+      }
+    
+      /* CSS for the footer */
+      .footer {
+        border-top: 1px solid #ccc;
+        page-break-after: always;
+      }
+    </style>
+
+
+      <div class="container">
+          <div class="code">
+            <span><strong>ORN INDIA</strong></span>
+          </div>
+          <div class="address">
+            <span><strong>#800, Shiv Krupa Nilaya, 3rd Cross, 7th Main Road, KempeGowda Nagar, T Dasarahalli, Bangalore-560057</strong></span>
+          </div>
+          <div class="additional-info">
+            <span>Banglore-560057 Mail ID: info@ornindia.com</span><br>
+            <span>GSTN No. 29CATPD5857R1ZH</span>
+          </div>
+      </div>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  .quotation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-right: 20px;
+    border-bottom: 2px solid #333;
+  }
+
+  tfoot tr:nth-child(odd) {
+    background-color: #f2f2f2;
+  }
+
+  .quotation-header img {
+    max-height: 60px;
+  }
+
+  #customizedText {
+    flex: 1;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-weight: normal;
+    background-color: #ffffff;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: medium;
+  }
+
+  table th,
+  table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: medium;
+  }
+
+  table th {
+    background-color: #333;
+    color: #fff;
+    font-weight: bold;
+    font-size: medium;
+  }
+
+  table tfoot td {
+    text-align: right;
+    border-top: 2px solid #333;
+  }
+
+  .term-conditions {
+  border: 2px solid #110f0f;
+  padding: 30px;
+  line-height: 1.5;
+  page-break-inside: avoid;
+}
+
+  .term-conditions h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+</style>
+<script>
+  $(document).ready(function () {
+    var selectedText = "";
+
+    $('#customizedText').mouseup(function () {
+      selectedText = getSelectedText();
+    });
+
+    function getSelectedText() {
+      var text = "";
+      if (typeof window.getSelection !== "undefined") {
+        text = window.getSelection().toString();
+      } else if (typeof document.selection !== "undefined" && document.selection.type === "Text") {
+        text = document.selection.createRange().text;
+      }
+      return text;
+    }
+
+    $('#printButton').click(function () {
+      var pageInnerContents = $('.page-inner').html();
+
+      var printWindow = window.open('', '_blank');
+      printWindow.document.open();
+      printWindow.document.write('<html> <head> <title>Print</title> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css"> <style>' +
+        '.quotation-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-right: 20px; border-bottom: 2px solid #333; }' +
+        'tfoot tr:nth-child(odd) { background-color: #f2f2f2; }' +
+        '.quotation-header img { max-height: 60px; }' +
+        '#customizedText { flex: 1; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }' +
+        'table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: medium; }' +
+        'table th, table td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; font-size: medium; }' +
+        'table th { background-color: #333; color: #fff; font-weight: bold; font-size: medium; }' +
+        'table tfoot td { text-align: right; border-top: 2px solid #333; }' +
+        '.term-conditions { border: 2px solid #110f0f; padding: 30px; line-height: 1.5; page-break-inside: avoid;}' +
+        '.term-conditions h4 { margin-top: 0; margin-bottom: 10px; }' +
+        '</style> </head> <body>' +
+        '<div class="content">' + pageInnerContents + '</div>' +
+        '</body> </html>');
+      printWindow.document.close();
+      printWindow.onload = function () {
+        printWindow.print();
+        printWindow.close();
+      };
+    });
+
+    $('#colorInput').change(function () {
+      var color = $(this).val();
+      applyStyleToSelectedText('color', color);
+    });
+
+    $('#fontWeightInput').change(function () {
+      var fontWeight = $(this).val();
+      applyStyleToSelectedText('font-weight', fontWeight);
+    });
+
+    $('#commonFontStyleInput').change(function () {
+      var commonFontStyle = $(this).val();
+      convertAllTextToCommonFontStyle(commonFontStyle);
+    });
+
+
+    $('#backgroundColorInput').change(function () {
+      var backgroundColor = $(this).val();
+      applyStyleToSelectedText('background-color', backgroundColor);
+    });
+
+    $('#fontFamilyInput').change(function () {
+      var fontFamily = $(this).val();
+      applyStyleToSelectedText('font-family', fontFamily);
+    });
+
+    function applyStyleToSelectedText(styleName, styleValue) {
+      var selection = window.getSelection();
+      if (selection.rangeCount > 0) {
+        var range = selection.getRangeAt(0);
+        var selectedText = range.toString();
+        var modifiedText = '<span style="' + styleName + ':' + styleValue + '">' + selectedText + '</span>';
+        range.deleteContents();
+        var newNode = document.createElement("span");
+        newNode.innerHTML = modifiedText;
+        range.insertNode(newNode);
+        convertAllTextToCommonFontStyle(styleValue); // Add this line to convert all text to the common font style
+      }
+    }
+
+    function convertAllTextToCommonFontStyle(fontStyle) {
+      var allTextElements = document.getElementsByTagName("span");
+      for (var i = 0; i < allTextElements.length; i++) {
+        allTextElements[i].style.fontFamily = fontStyle;
+      }
+    }
+
+  });
+
+  function numberToWords(number) {
+    var units = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+    var tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+    var teens = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+
+    function convertTwoDigits(num) {
+      if (num < 10) {
+        return units[num];
+      } else if (num < 20) {
+        return teens[num - 10];
+      } else {
+        var tenDigit = Math.floor(num / 10);
+        var unitDigit = num % 10;
+        return tens[tenDigit] + ' ' + units[unitDigit];
+      }
+    }
+
+    function convertThreeDigits(num) {
+      var hundredDigit = Math.floor(num / 100);
+      var remainingTwoDigits = num % 100;
+      var words = '';
+      if (hundredDigit > 0) {
+        words += units[hundredDigit] + ' hundred ';
+      }
+      if (remainingTwoDigits > 0) {
+        words += convertTwoDigits(remainingTwoDigits);
+      }
+      return words;
+    }
+
+    if (number === 0) {
+      return 'zero';
+    } else {
+      var words = '';
+      var million = Math.floor(number / 1000000);
+      var thousand = Math.floor((number % 1000000) / 1000);
+      var remaining = number % 1000;
+      if (million > 0) {
+        words += convertThreeDigits(million) + ' million ';
+      }
+      if (thousand > 0) {
+        words += convertThreeDigits(thousand) + ' thousand ';
+      }
+      if (remaining > 0) {
+        words += convertThreeDigits(remaining);
+      }
+      return words.trim();
+    }
+  }
+
+  var grandTotalOfferElement = document.getElementById("grandTotalOffer");
+  var grandTotalOffer = parseInt("{{ add_user.grandTotal }}");
+  grandTotalOfferElement.innerHTML = numberToWords(grandTotalOffer).toUpperCase();
+
+  $(function () {
+    $(".popup").draggable(); // Make the popup draggable
+  });
+
+
+</script>
+
+
+{% endblock content %}
